@@ -5,7 +5,6 @@
 void (*hello_msg)(const char *);
 
 bool init_lib(){
-    printf("g");
     void *hdl = dlopen("libHello.so", RTLD_LAZY);
     if(NULL == hdl)
         return false;
