@@ -3,15 +3,12 @@
 #include <stdio.h>
 
 int main(){
-    int pid = fork();
-    if(!pid){
-        setsid();
-        close(STDIN_FILENO);
-        close(STDOUT_FILENO);
-        close(STDERR_FILENO);
-        return 0;
-    }else{
-        printf("%d\n", pid);
-        return 0;
-    }
+    printf("%d\n", getpid());
+    setsid();
+    close(STDIN_FILENO);
+    close(STDOUT_FILENO);
+    close(STDERR_FILENO);
+    sleep(100);
+    return 0;
 }
+   
