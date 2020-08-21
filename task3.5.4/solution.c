@@ -9,31 +9,27 @@
 #include <dirent.h>
 #include <stdlib.h>
 
-const int get_ps_ppid(const char * pid){
+int rec(const char *pid ){
+    int count =0, i=0;
     char procdir[256];
+    char * ps = calloc(128, sizeof(char));
+
     procdir[0]= '\0';
-
-    strcat(procdir, "/proc/");
-    strcat(procdir, pid);
-    strcat(procdir, "/stat");
-
+    sprintf(procdir, "/proc/%s/task/%s/children", pid, pid);
     FILE * fd =fopen(procdir, "rd");
-    if(fd ==NULL) return -1;
-
-    int ppid;
-    fscanf(fd, "%*d %*s %*c %d", &ppid);
     
-    return ppid;
 
+    while( fscanf(fd, "%s",ps )!=EOF){
+        count++;
+        count += rec(ps);
+    }
+    fclose(fd);
+    return count;
 }
+
 int main(int argc, char *argv[]){
-    char procdir[256];
-    procdir[0]= '\0';
-    sprintf(procdir, "/proc/%s/task/%s/children", argv[1], argv[1]);
-    FILE * fd =fopen(procdir, "rd");
-    int i=0;
-    while( fscanf(fd, "%*s")!=EOF)i++;
-    printf("%d\n", i);
+
+    printf("%d\n", rec(argv[1]));
     return 0;
 }
 
