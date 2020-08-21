@@ -27,17 +27,13 @@ const int get_ps_ppid(const char * pid){
 
 }
 int main(int argc, char *argv[]){
-    int ppid  = get_ps_ppid(argv[1]);
-    printf("%s\n", argv[1] );
-    while (ppid!=0)
-    {
-        printf("%d\n", ppid);
-        char buf[128];
-        buf[0]='\0';
-        sprintf(buf, "%d", ppid);
-        ppid = get_ps_ppid( buf );
-    }
-
+    char procdir[256];
+    procdir[0]= '\0';
+    sprintf(procdir, "/proc/%s/task/%s/children", argv[1], argv[1]);
+    FILE * fd =fopen(procdir, "rd");
+    int i=0;
+    while( fscanf(fd, "%*s")!=EOF)i++;
+    printf("%d\n", i);
     return 0;
 }
 
