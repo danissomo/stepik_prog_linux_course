@@ -9,7 +9,7 @@
 #include <dirent.h>
 #include <stdlib.h>
 
-const char *get_ps_name(const char * pid){
+const int get_ps_ppid(const char * pid){
     char procdir[256];
     procdir[0]= '\0';
 
@@ -18,45 +18,25 @@ const char *get_ps_name(const char * pid){
     strcat(procdir, "/stat");
 
     FILE * fd =fopen(procdir, "rd");
-    if(fd ==NULL) return "";
+    if(fd ==NULL) return -1;
 
-    char tmp[256];
-    char* psname = calloc(256,sizeof(char));
-    fscanf(fd, "%*d %s", tmp);
-    int i =1;
-    for( i =1 ; i< strlen(tmp)-1;i++)
-        psname[i-1]=tmp[i];
-
-    psname[strlen(tmp)-2] = '\0';
-    return psname;
+    int ppid;
+    fscanf(fd, "%*d %*s %*c %d", &ppid);
+    
+    return ppid;
 
 }
-int main(){
-    
-    struct dirent **namelist;
-    int n;
-
-    n = scandir("/proc", &namelist, NULL, alphasort);
-    if (n == -1) {
-        perror("scandir");
-        exit(EXIT_FAILURE);
+int main(int argc, char *argv[]){
+    int ppid  = get_ps_ppid(argv[1]);
+    printf("%s\n", argv[1] );
+    while (ppid!=0)
+    {
+        printf("%d\n", ppid);
+        char buf[128];
+        buf[0]='\0';
+        sprintf(buf, "%d", ppid);
+        ppid = get_ps_ppid( buf );
     }
-
-    int count=0;
-
-    while (n--) {
-        const char * ps_name=get_ps_name(namelist[n]->d_name);
-        if(strcmp("genenv", ps_name)==0) count++ ;
-
-        //if(strcmp("", ps_name)==0) continue;
-        //printf("%s\n", ps_name);
-
-        free(namelist[n]);
-        
-    }
-
-    free(namelist);
-    printf("%d\n", count);
 
     return 0;
 }
