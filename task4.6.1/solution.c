@@ -14,6 +14,6 @@ int main(int argc, char* argv[]){
     while((tmp = fgetc(fd)) != EOF )
         if(tmp == '0') count++;
     pclose(fd);
-    printf("%ld\n", count);
+    printf("%d\n", count);
 
 }
