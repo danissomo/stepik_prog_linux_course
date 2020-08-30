@@ -32,8 +32,8 @@ int main(){
             sum += atoi(buff);
         }
 
-        if(FD_ISSET(in1, &fdset)) {
-            read2 = read(in1, buff, 31);
+        if(FD_ISSET(in2, &fdset)) {
+            read2 = read(in2, buff, 31);
             if(read2 == EOF) continue;
             buff[read2+1] = '\0';
             sum += atoi(buff);
