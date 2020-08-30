@@ -7,44 +7,39 @@
 #include <fcntl.h>
 
 int main(){
+    char buff[32];
     
-    struct timeval tv;
-    tv.tv_sec = 5;
-    tv.tv_usec = 0;
     int read1 = 1, read2 = 1;
     int retval, sum = 0;
     int in1 = open("in1", O_NONBLOCK | O_RDONLY), in2 = open("in2", O_NONBLOCK | O_RDONLY);
-    char buff[128];
 
-    while ((read1 != EOF) || (read1 != EOF) ){
-
-        if(read1 == EOF) goto in2check;
-        retval = select(1, &in1, NULL, NULL, &tv);
-        if (retval == -1)
-            perror("select()");
-        else if (retval){
-            //printf("Data is available now.\n");
-            read1 = read(in1, buff, retval);
+    int ndfs;
+    if(in1 > in2) ndfs = in1+1;
+    else ndfs = in2 +1;
+    while(read1!=EOF && read2!=EOF){
+        struct timeval tv;
+        tv.tv_sec = 5;
+        tv.tv_usec = 0;
+        fd_set fdset;
+        FD_SET(in1, &fdset);
+        FD_SET(in2, &fdset);
+        int retv = select(ndfs, &fdset, NULL, NULL, &tv);
+        if(retv == 0 || retv == -1) continue;
+        if(FD_ISSET(in1, &fdset)) {
+            read1 = read(in1, buff, 31);
             if(read1 == EOF) continue;
-            buff[retval] = '\0';
+            buff[read1+1] = '\0';
             sum += atoi(buff);
         }
-        
-        in2check:
-        if(read2==EOF) continue;
-        retval = select(1, &in2, NULL, NULL, &tv);
-        if (retval == -1)
-            perror("select()");
-        else if (retval){
-            //printf("Data is available now.\n");
-            read2 = read(in1, buff, retval);
+
+        if(FD_ISSET(in1, &fdset)) {
+            read2 = read(in1, buff, 31);
             if(read2 == EOF) continue;
-            buff[retval] = '\0';
-            sum += atoi(buff); 
+            buff[read2+1] = '\0';
+            sum += atoi(buff);
         }
-            
+        FD_ZERO(&fdset);
     }
-    
-   printf("%d\n", sum);
+    printf("%d\n", sum);
     return(0);
 }
