@@ -14,7 +14,7 @@ int main(){
     int read1 = 1, read2 = 1;
     int retval, sum = 0;
     int in1 = open("in1", O_NONBLOCK | O_RDONLY), in2 = open("in2", O_NONBLOCK | O_RDONLY);
-    char buff[100];
+    char buff[128];
 
     while ((read1 != EOF) || (read1 != EOF) ){
 
@@ -45,6 +45,6 @@ int main(){
             
     }
     
-   
+   printf("%d\n", sum);
     return(0);
 }
