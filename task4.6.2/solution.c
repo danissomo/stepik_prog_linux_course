@@ -11,7 +11,7 @@ int main(){
     
     int read1 = 1, read2 = 1;
     int retval, sum = 0;
-    int in1 = open("in1", O_NONBLOCK | O_RDONLY), in2 = open("in2", O_NONBLOCK | O_RDONLY);
+    int in1 = open("in1",  O_RDONLY), in2 = open("in2",  O_RDONLY);
 
     int ndfs;
     if(in1 > in2) ndfs = in1+1;
