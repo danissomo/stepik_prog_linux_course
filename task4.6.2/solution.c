@@ -16,7 +16,7 @@ int main(){
     int ndfs;
     if(in1 > in2) ndfs = in1+1;
     else ndfs = in2 +1;
-    while(read1!=EOF && read2!=EOF){
+    while(read1!=0 && read2!=0){
         struct timeval tv;
         tv.tv_sec = 5;
         tv.tv_usec = 0;
@@ -27,14 +27,14 @@ int main(){
         if(retv == 0 || retv == -1) continue;
         if(FD_ISSET(in1, &fdset)) {
             read1 = read(in1, buff, 31);
-            if(read1 == EOF) continue;
+            if(read1 == 0) continue;
             buff[read1+1] = '\0';
             sum += atoi(buff);
         }
 
         if(FD_ISSET(in2, &fdset)) {
             read2 = read(in2, buff, 31);
-            if(read2 == EOF) continue;
+            if(read2 == 0) continue;
             buff[read2+1] = '\0';
             sum += atoi(buff);
         }
