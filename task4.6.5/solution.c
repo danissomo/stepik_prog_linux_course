@@ -10,8 +10,9 @@ int main(int c, char *v[]){
     key_t key;
     
     key = ftok(v[0], getpid());
-    int* shmseg1 = (int*) shmat(atoll(v[1]), NULL, 0);
-    int* shmseg2 = (int*) shmat(atoll(v[2]), NULL, 0);
+    
+    int* shmseg1 = (int*) shmat( shmget(atoll(v[1]), sizeof(char)*1000, 0600)  , NULL, 0600);
+    int* shmseg2 = (int*) shmat(shmget(atoll(v[2]), sizeof(char)*1000, 0600), NULL, 0600);
     int shmid = shmget(key, sizeof(char)*1000,  IPC_CREAT | 0666);
     int* rshmseg = (int*)shmat(shmid, NULL, 0);
     int i;
