@@ -4,6 +4,7 @@
 #include <ctype.h>
 #include <sys/ipc.h>
 #include <fcntl.h>
+#include <sys/stat.h>
 int main(int c, char *v[]){
     key_t key;
     int fd =open("shm-c", O_CREAT);
