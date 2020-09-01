@@ -5,9 +5,10 @@
 #include <sys/ipc.h>
 
 int main(int c, char *v[]){
+    key_t key;
     int* shmseg1 = (int*) shmat(atoi(v[1]), NULL, SHM_RDONLY);
     int* shmseg2 = (int*) shmat(atoi(v[2]), NULL, SHM_RDONLY);
-    int shmid = shmget(2222, sizeof(int)*100, IPC_CREAT);
+    int shmid = shmget(key, sizeof(int)*100, IPC_CREAT);
     int* rshmseg = (int*)shmat(shmid, NULL, NULL);
     int i;
     for(i =0; i < 100; i++)
